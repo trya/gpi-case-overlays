@@ -1,0 +1,134 @@
+// redo: ovmerge -c vc4-kms-dpi-generic-overlay.dts,hactive=640,hfp=41,hsync=40,hbp=41,vactive=480,vfp=18,vsync=9,vbp=18,clock-frequency=24000000,rgb666-padhi,width-mm=60,height-mm=45 dwc2-overlay.dts,dr_mode=host gpio-led-overlay.dts,gpio=27,active_low=1,label=power_enable gpio-shutdown-overlay.dts,gpio_pin=26
+
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/pinctrl/bcm2835.h>
+
+/ {
+	compatible = "brcm,bcm2835";
+	fragment@0 {
+		target-path = "/";
+		__overlay__ {
+			panel: panel {
+				rotation = <0>;
+				width-mm = <60>;
+				height-mm = <45>;
+				port {
+					panel_in: endpoint {
+						remote-endpoint = <&dpi_out>;
+					};
+				};
+			};
+		};
+	};
+	fragment@1 {
+		target = <&dpi>;
+		__overlay__ {
+			status = "okay";
+			pinctrl-names = "default";
+			port {
+				dpi_out: endpoint {
+					remote-endpoint = <&panel_in>;
+				};
+			};
+		};
+	};
+	fragment@2 {
+		target = <&panel>;
+		__overlay__ {
+			compatible = "panel-dpi";
+			width-mm = <154>;
+			height-mm = <83>;
+			bus-format = <4117>;
+			panel-timing {
+				clock-frequency = <24000000>;
+				hactive = <640>;
+				hfront-porch = <41>;
+				hsync-len = <40>;
+				hback-porch = <41>;
+				hsync-active = <1>;
+				vactive = <480>;
+				vfront-porch = <18>;
+				vsync-len = <9>;
+				vback-porch = <18>;
+				vsync-active = <1>;
+				de-active = <1>;
+				pixelclk-active = <1>;
+			};
+		};
+	};
+	fragment@3 {
+		target = <&dpi>;
+		__overlay__ {
+			pinctrl-0 = <&dpi_18bit_cpadhi_gpio0>;
+		};
+	};
+	fragment@4 {
+		target = <&usb>;
+		#address-cells = <1>;
+		#size-cells = <1>;
+		__overlay__ {
+			compatible = "brcm,bcm2835-usb";
+			dr_mode = "host";
+			g-np-tx-fifo-size = <32>;
+			g-rx-fifo-size = <558>;
+			g-tx-fifo-size = <512 512 512 512 512 256 256>;
+			status = "okay";
+		};
+	};
+	fragment@5 {
+		target = <&gpio>;
+		__overlay__ {
+			led_pin: led_pins@1b {
+				brcm,pins = <27>;
+				brcm,function = <1>;
+				brcm,pull = <0>;
+			};
+		};
+	};
+	fragment@6 {
+		target-path = "/";
+		__overlay__ {
+			leds@1b {
+				compatible = "gpio-leds";
+				pinctrl-names = "default";
+				pinctrl-0 = <&led_pin>;
+				status = "okay";
+				led {
+					label = "power_enable";
+					gpios = <&gpio 27 1>;
+					linux,default-trigger = "none";
+				};
+			};
+		};
+	};
+	fragment@7 {
+		target = <&gpio>;
+		__overlay__ {
+			pin_state: shutdown_button_pins@1a {
+				brcm,pins = <26>;
+				brcm,function = <0>;
+				brcm,pull = <2>;
+			};
+		};
+	};
+	fragment@8 {
+		target-path = "/soc";
+		__overlay__ {
+			shutdown_button@1a {
+				compatible = "gpio-keys";
+				pinctrl-names = "default";
+				pinctrl-0 = <&pin_state>;
+				status = "okay";
+				shutdown {
+					label = "shutdown";
+					linux,code = <116>;
+					gpios = <&gpio 26 1>;
+					debounce-interval = <100>;
+				};
+			};
+		};
+	};
+};
