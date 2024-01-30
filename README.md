@@ -17,7 +17,11 @@ dtoverlay=gpi-case-2
 ```
 You may want to remove the `otg_mode=1` line if present as it prevents the use of USB peripherals.
 
-And that's all for the main use case. The screen works with the KMS driver (not firmware KMS anymore) and switching the power button should trigger a `KEY_POWER` event (code 116) that systemd should catch and then execute a proper shutdown.
+And that's all for the main use case. The screen works with the KMS driver (not firmware KMS anymore) and switching the power button should trigger a `KEY_POWER` event (code 116) that systemd should catch and then execute a proper shutdown, given logind is properly configured. `/etc/systemd/logind.conf` should tell systemd to power off the system upon such event:
+```
+[Login]
+HandlePowerKey=poweroff
+```
 
 ## Compiling device tree overlays
 
