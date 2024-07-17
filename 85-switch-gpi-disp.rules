@@ -1,0 +1,1 @@
+ACTION=="change", KERNEL=="card1", SUBSYSTEM=="drm", RUN+="/usr/local/bin/switch_gpi_disp.sh"

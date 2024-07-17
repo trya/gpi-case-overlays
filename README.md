@@ -10,6 +10,8 @@ The main idea behind these is to get the GPI Case to work with unpatched distrib
 
 ## Usage
 
+### Main use case (DPI screen and safe shutdown)
+
 Copy the binary device tree overlays (with `.dtbo` extension) into the `/boot/overlays` directory (or `/boot/firmware/overlays` on RPi OS Bookworm and later), then add the following section into `/boot/config.txt`:
 ```
 [cm4]
@@ -22,6 +24,11 @@ And that's all for the main use case. The screen works with the KMS driver (not 
 [Login]
 HandlePowerKey=poweroff
 ```
+
+### Automatic display switching with dock
+
+When the GPI Case 2 is docked with the provided Retroflag dock, we expect both the machine to switch to HDMI video and audio outputs, which is not so evident depending on the desktop environment.
+Supposing a simple X11 desktop environment which does not manage displays and Pulseaudio/Pipewire as the sound server, just copy  `switch_gpi_disp.sh` to `/usr/local/bin` and `85-switch-gpi-disp.rules` to `/etc/udev/rules.d`. Reboot or reload udev rules and that's it for automatic display switching!
 
 ## Compiling device tree overlays
 
@@ -36,6 +43,8 @@ dtc -I dts -O dtb -o gpi-case-2.dtbo gpi-case-2-overlay.dts.preproc
 ```
 
 ## Technical details
+
+### Device tree overlay 
 
 The source overlay is built with already existing overlays provided with the kernel. The above line 
 `dtoverlay=gpi-case-2` in `/boot/config.txt` could be replaced with:
@@ -53,8 +62,12 @@ dtoverlay=gpio-shutdown,gpio_pin=26
 - `dtoverlay=vc4-kms-dpi-generic` and the following `dtparams` configures the 3-inch display (DPI) with the proper timings in KMS. The `rgb666-padhi` parameter tells the kernel that only the 6 most significant bits are used for each color channel, meaning GPIO pins 10, 11, 18, 19, 26 and 27 are not used by the display (the later two of which will be important for safe shutdown).
 - `dtoverlay=gpio-led,gpio=27,active_low=1,label=power_enable` and `dtoverlay=gpio-shutdown,gpio_pin=26` are related to safe shutdown. Actually, when you switch the power button of the GPI Case 2 back to off, GPIO 26 on the CM4 gets pulled down and power is cut immediately. It looks like GPIO 27 on the CM4 is also wired to power, so keeping it high with overlay `gpio-led` will keep the machine powered on despite switch off. Then, the CM4 can see the falling edge on GPIO 26 and consider it a `KEY_POWER` event thanks to overlay `gpio-shutdown`.
 
+### Automatic display switching
+
+When the GPI Case 2 is plugged in the USB-C port of the dock, GPIO 18 is raised and the both display and speaker are turned off (this is not controlled by the Raspberry Pi, by the way). The main effect of GPIO 18 from the CM4's point of view is that it controls the emulation of an HDMI input (with its associated I2C/DDC bus and EDID ROM), with a maximum resolution of 1280x720 at 60 Hz, which means the CM4 cannot really know the external display that's actually plugged in the dock, only a couple of common resolutions are exposed to the CM4. GPIO 18 is actually not raised if no display is plugged in the dock, which means its behavior is controlled in logic inside the dock.
+The best we can do as far as the Retroflag dock is involved is to detect that a display is connected through a udev event, then change the video and audio outputs. On the GPI Case 2, the speaker is connected to a USB audio card (referenced as sink "alsa_output.usb-GeneralPlus_USB_Audio_Device-00.analog-stereo" in Pulseaudio).
+
 ## TODO
 
 - Overlays for other GPI Case models.
-- Automatic display and audio output switching with the dock. Generic dock with HDMI output and HDMI adapters don't work with the GPI Case 2, because the video output signal from the USB-C port is directly HDMI, not DisplayPort as the active HDMI adapters usually expect. Retroflag's dock is basically a dumb dock that doesn't route the DDC signal from the external display to the GPI Case: when both the machine is docked and a HDMI display is connected to the dock, GPIO 18 is raised and a dummy EDID with resolutions up to 1280x720 is exposed to the CM4's HDMI input port. Automatic switching on this dock will just be a matter of some udev rules. Also, the internal speakers of the GPI Case 2 are connected to USB audio card, which takes over the HDMI audio output as default output, this needs to be taken into consideration for auto-switching.
 - Modding for compatibility with all HDMI displays resolutions: I need to find out how to bypass the current HDMI-to-USB passthrough and enable full HDMI functionality between the external display and the CM4.
