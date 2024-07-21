@@ -12,7 +12,7 @@ external="HDMI-1"
 device="card1-HDMI-A-1"
 
 if [ "$(cat /sys/class/drm/$device/status)" = "connected" ]; then
-  while ! xrandr | grep "HDMI-1 connected" >/dev/null; do sleep 0.1; done
+  while ! xrandr | grep "$external connected" >/dev/null; do sleep 0.1; done
   xrandr --output $external --auto --output $internal --off
   sudo -u $user pactl --server "$pserv" set-default-sink "alsa_output.platform-fef00700.hdmi.hdmi-stereo"
 elif [ "$(cat /sys/class/drm/${device}/status)" = "disconnected" ]; then
