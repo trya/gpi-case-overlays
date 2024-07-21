@@ -65,7 +65,8 @@ dtoverlay=gpio-shutdown,gpio_pin=26
 ### Automatic display switching
 
 When the GPI Case 2 is plugged in the USB-C port of the dock, GPIO 18 is raised and the both display and speaker are turned off (this is not controlled by the Raspberry Pi, by the way). The main effect of GPIO 18 from the CM4's point of view is that it controls the emulation of an HDMI input (with its associated I2C/DDC bus and EDID ROM), with a maximum resolution of 1280x720 at 60 Hz, which means the CM4 cannot really know the external display that's actually plugged in the dock, only a couple of common resolutions are exposed to the CM4. GPIO 18 is actually not raised if no display is plugged in the dock, which means its behavior is controlled in logic inside the dock.
-The best we can do as far as the Retroflag dock is involved is to detect that a display is connected through a udev event, then change the video and audio outputs. On the GPI Case 2, the speaker is connected to a USB audio card (referenced as sink "alsa_output.usb-GeneralPlus_USB_Audio_Device-00.analog-stereo" in Pulseaudio).
+
+The best we can do as far as the Retroflag dock is involved is to detect that a display is connected through a udev event, then change the video and audio outputs. On the GPI Case 2, the speaker is connected to a USB audio card (referenced as sink `alsa_output.usb-GeneralPlus_USB_Audio_Device-00.analog-stereo` in Pulseaudio).
 
 ## TODO
 
