@@ -68,7 +68,38 @@ When the GPI Case 2 is plugged in the USB-C port of the dock, GPIO 18 is raised 
 
 The best we can do as far as the Retroflag dock is involved is to detect that a display is connected through a udev event, then change the video and audio outputs. On the GPI Case 2, the speaker is connected to a USB audio card (referenced as sink `alsa_output.usb-GeneralPlus_USB_Audio_Device-00.analog-stereo` in Pulseaudio).
 
+### Pinout
+
+The pinout of the GPI Case 2 USB-C port does not map to HDMI Alt mode, it is completely custom:
+
+| USB-C | HDMI |
+--------|-------
+| A1/A12/B1/B12 | 2/5/8/11/17 (GND) |
+| A4/A9/B4/B9 | 18 (+5V) |
+| A2 | 9 (D0-) |
+| A3 | 7 (D0+) |
+| A8 | 19 (HDP) |
+| A10 | 6 (D1-) |
+| A11 | 4 (D1+) |
+| B2 | 3 (D2-) |
+| B3 | 1 (D2+) |
+| B8 | 13 (CEC) |
+| B10 | 12 (CLK-) |
+| B11 | 10 (CLK+) |
+
+Other pins unrelated to HDMI:
+
+| USB-C | |
+--------|-|
+| A6/B6 | USB D- |
+| A7/B7 | USB D+ |
+| B5/A5 | unused |
+
+The USB-C port does not map to HDMI DDC pins (15 and 16), which explains why the GPI Case 2 cannot access the EDID of attached display. Which is a blunder, because they could have been easily mapped to B5 and A5, which are unused. Actually, on the dock HDMI port, the DDC pins are fed +3.3V permanently.
+
+Pin A8, which is mapped to the HPD (Hot-Plug Detect) pin on the HDMI side is responsible in raising GPIO 18 on the CM4, thus enabling the fake EDID and turning off the screen in a hardware manner. The HPD pin on the CM4 HDMI pins is unlikely to be directly connected to pin A8.
+
 ## TODO
 
 - Overlays for other GPI Case models.
-- Modding for compatibility with all HDMI displays resolutions: I need to find out how to bypass the current HDMI-to-USB passthrough and enable full HDMI functionality between the external display and the CM4.
+- Modding for compatibility with all HDMI displays resolutions: I need to find out how to bypass the current HDMI-to-USB passthrough and enable full HDMI functionality between the external display and the CM4 (see [Pinout](#pinout)).
