@@ -70,7 +70,7 @@ The best we can do as far as the Retroflag dock is involved is to detect that a 
 
 ### Pinout
 
-The pinout of the GPI Case 2 USB-C port does not map to HDMI Alt mode, it is completely custom:
+The pinout of the GPI Case 2 USB-C port does not map strictly to [HDMI Alt mode specification](https://en.wikipedia.org/wiki/HDMI#/media/File:HDMI_Alt_Mode_-_USB_Type-C_pin_mapping.png), it is completely custom:
 
 | USB-C | HDMI |
 --------|-------
