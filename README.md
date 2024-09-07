@@ -68,7 +68,7 @@ When the GPI Case 2 is plugged in the USB-C port of the dock, GPIO 18 is raised 
 
 The best we can do as far as the Retroflag dock is involved is to detect that a display is connected through a udev event, then change the video and audio outputs. On the GPI Case 2, the speaker is connected to a USB audio card (referenced as sink `alsa_output.usb-GeneralPlus_USB_Audio_Device-00.analog-stereo` in Pulseaudio).
 
-### Pinout
+### USB-C pinout
 
 The pinout of the GPI Case 2 USB-C port does not map strictly to [HDMI Alt mode specification](https://en.wikipedia.org/wiki/HDMI#/media/File:HDMI_Alt_Mode_-_USB_Type-C_pin_mapping.png), it is completely custom:
 
