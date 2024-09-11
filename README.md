@@ -102,4 +102,4 @@ Pin A8, which is mapped to the HPD (Hot-Plug Detect) pin on the HDMI side is res
 ## TODO
 
 - Overlays for other GPI Case models.
-- Modding for compatibility with all HDMI displays resolutions: I need to find out how to bypass the current HDMI-to-USB passthrough and enable full HDMI functionality between the external display and the CM4 (see [Pinout](#pinout)).
+- Modding for compatibility with all HDMI displays resolutions: I need to find out how to bypass the current HDMI-to-USB passthrough and enable full HDMI functionality between the external display and the CM4 (see [USB-C Pinout](#usb-c-pinout)).
