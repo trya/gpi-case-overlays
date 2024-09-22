@@ -95,9 +95,9 @@ Other pins unrelated to HDMI:
 | A7/B7 | USB D+ |
 | B5/A5 | unused |
 
-The USB-C port does not map to HDMI DDC pins (15 and 16), which explains why the GPI Case 2 cannot access the EDID of attached display. Which is a blunder, because they could have been easily mapped to B5 and A5, which are unused. Actually, on the dock HDMI port, the DDC pins are fed +3.3V permanently.
+The USB-C port does not map to HDMI DDC pins (15 and 16), which explains why the GPI Case 2 cannot access the EDID of the attached display. Which is a blunder, because they could have been easily mapped to B5 and A5, which are unused. Actually, on the dock HDMI port, the DDC pins are fed +3.3V permanently.
 
-Pin A8, which is mapped to the HPD (Hot-Plug Detect) pin on the HDMI side is responsible in raising GPIO 18 on the CM4, thus enabling the fake EDID and turning off the screen in a hardware manner. The HPD pin on the CM4 HDMI pins is unlikely to be directly connected to pin A8.
+Pin A8, which is mapped to the HPD (Hot-Plug Detect) pin on the HDMI side is responsible for raising GPIO 18 on the CM4, thus enabling the fake EDID and turning off the screen in a hardware manner. The HPD pin on the CM4 HDMI pins is unlikely to be directly connected to pin A8.
 
 ## TODO
 
