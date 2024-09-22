@@ -7,9 +7,9 @@
 /dts-v1/;
 /plugin/;
 
-# 1 "/home/mika/uni/evbuilder/buildroot/dl/linux/git/include/dt-bindings/gpio/gpio.h" 1
+# 1 "/home/trya/buildroot/dl/linux/git/include/dt-bindings/gpio/gpio.h" 1
 # 7 "gpi-case-2-overlay.dts" 2
-# 1 "/home/mika/uni/evbuilder/buildroot/dl/linux/git/include/dt-bindings/pinctrl/bcm2835.h" 1
+# 1 "/home/trya/buildroot/dl/linux/git/include/dt-bindings/pinctrl/bcm2835.h" 1
 # 8 "gpi-case-2-overlay.dts" 2
 
 / {
